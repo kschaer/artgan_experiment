@@ -147,7 +147,6 @@ def do_stuff():
                      optimizer=optimizer, metrics=["accuracy"])
 
     combined.summary()
-    combined.save_weights()
 
     y_real = np.ones((BATCH_SIZE, 1))
     y_fake = np.zeros((BATCH_SIZE, 1))
