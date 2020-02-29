@@ -18,12 +18,12 @@ NOISE_SIZE = 100
 EPOCHS = 10000  # number of iterations
 BATCH_SIZE = 32
 GENERATE_RES = 3
-IMAGE_SIZE = 128  # rows/cols
+IMAGE_SIZE = 512  # rows/cols
 IMAGE_CHANNELS = 3
 
 
 # load stuff
-training_data = np.load('cyanotype_data.npy')
+training_data = np.load('cyanotype_data_large.npy')
 
 
 def build_discriminator(image_shape):
@@ -41,14 +41,26 @@ def build_discriminator(image_shape):
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
-    model.add(Conv2D(256, kernel_size=3, strides=1, padding="same"))
+    model.add(Conv2D(256, kernel_size=3, strides=2, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
+
     model.add(Conv2D(512, kernel_size=3, strides=1, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
+
+    model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.25))
+
+    model.add(Conv2D(2048, kernel_size=3, strides=1, padding="same"))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.25))
+
     model.add(Flatten())
     model.add(Dense(1, activation="sigmoid"))
     input_image = Input(shape=image_shape)
@@ -58,19 +70,19 @@ def build_discriminator(image_shape):
 
 def build_generator(noise_size, channels):
     model = Sequential()
-    model.add(Dense(4 * 4 * 256, activation="relu",       input_dim=noise_size))
-    model.add(Reshape((4, 4, 256)))
+    model.add(Dense(4 * 4 * 1024, activation="relu",       input_dim=noise_size))
+    model.add(Reshape((4, 4, 1024)))
     model.add(UpSampling2D())
-    model.add(Conv2D(256, kernel_size=3, padding="same"))
+    model.add(Conv2D(1024, kernel_size=3, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(Activation("relu"))
     model.add(UpSampling2D())
-    model.add(Conv2D(256, kernel_size=3, padding="same"))
+    model.add(Conv2D(1024, kernel_size=3, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(Activation("relu"))
     for i in range(GENERATE_RES):
         model.add(UpSampling2D())
-        model.add(Conv2D(256, kernel_size=3, padding="same"))
+        model.add(Conv2D(1024, kernel_size=3, padding="same"))
         model.add(BatchNormalization(momentum=0.8))
         model.add(Activation("relu"))
     model.summary()
@@ -144,9 +156,8 @@ def do_stuff():
         if epoch % SAVE_FREQ == 0:
             save_images(cnt, fixed_noise, generator)
             cnt += 1
-
-    print(
-        f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
+        print(
+            f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
 
 
 do_stuff()

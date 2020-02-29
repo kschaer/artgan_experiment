@@ -2,4 +2,5 @@ dataset/*
 downloads/*
 manual/*
 cyanotype_data.npy
+cyanotype_data_large.npy
 .DS_Store
