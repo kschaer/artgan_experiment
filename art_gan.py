@@ -28,7 +28,7 @@ IMAGE_CHANNELS = 3
 DOUBLE_IMAGE_SIZE = IMAGE_SIZE * 2
 
 # load stuff
-training_data = np.load('cyanotype_data_medium.npy')
+training_data = np.load('cyanotype_data_small.npy')
 
 checkpoint_path = "training_2/cp-{epoch:04d}.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
