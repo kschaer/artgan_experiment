@@ -39,4 +39,5 @@ training_data = np.reshape(
 training_data = training_data / 511.5 - 1
 
 print('saving file...')
+print(training_data.shape)
 np.save('cyanotype_data_large.npy', training_data)
