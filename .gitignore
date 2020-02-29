@@ -3,4 +3,5 @@ downloads/*
 manual/*
 cyanotype_data.npy
 cyanotype_data_large.npy
+cyanotype_data_*
 .DS_Store
