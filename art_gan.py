@@ -30,7 +30,7 @@ DOUBLE_IMAGE_SIZE = IMAGE_SIZE * 2
 # load stuff
 training_data = np.load('cyanotype_data_small.npy')
 
-checkpoint_path = "training_2/cp-{epoch:04d}.ckpt"
+checkpoint_path = "checkpoints/cp-{epoch:04d}.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
 
 
@@ -180,6 +180,8 @@ def do_stuff():
         if epoch % SAVE_FREQ == 0:
             save_images(cnt, fixed_noise, generator)
 
+            if not os.path.exists(checkpoint_dir):
+                os.makedirs(checkpoint_dir)
             combined.save_weights(checkpoint_path.format(epoch=0))
 
             cnt += 1
