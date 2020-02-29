@@ -8,7 +8,7 @@ from PIL import Image
 # We are going to resize all our images to 128X128 size and since our images are colored images
 # We are setting our image channels to 3 (RGB)
 
-IMAGE_SIZE = 256
+IMAGE_SIZE = 128
 IMAGE_CHANNELS = 3
 IMAGE_DIR = 'dataset/'
 
@@ -36,8 +36,8 @@ for filename in os.listdir(images_path):
 
 training_data = np.reshape(
     np.array(training_data), (-1, IMAGE_SIZE, IMAGE_SIZE, IMAGE_CHANNELS))
-training_data = training_data / 255.5 - 1
+training_data = training_data / 127.5 - 1
 
 print('saving file...')
 print(training_data.shape)
-np.save('cyanotype_data_medium.npy', training_data)
+np.save('cyanotype_data_small.npy', training_data)

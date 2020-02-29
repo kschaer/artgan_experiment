@@ -18,11 +18,11 @@ SAVE_FREQ = 100
 NOISE_SIZE = 100
 # Configuration
 EPOCHS = 10000  # number of iterations
-BATCH_SIZE = 16
-# GENERATE_RES = 3
-GENERATE_RES = 4
+BATCH_SIZE = 32
+GENERATE_RES = 3
+# GENERATE_RES = 4
 # IMAGE_SIZE = 512  # rows/cols
-IMAGE_SIZE = 256
+IMAGE_SIZE = 128
 IMAGE_CHANNELS = 3
 
 DOUBLE_IMAGE_SIZE = IMAGE_SIZE * 2
@@ -53,7 +53,7 @@ def build_discriminator(image_shape):
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(256, kernel_size=3, strides=2, padding="same"))
+    model.add(Conv2D(256, kernel_size=3, strides=1, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
@@ -63,10 +63,10 @@ def build_discriminator(image_shape):
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
-    model.add(BatchNormalization(momentum=0.8))
-    model.add(LeakyReLU(alpha=0.2))
-    model.add(Dropout(0.25))
+    # model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
+    # model.add(BatchNormalization(momentum=0.8))
+    # model.add(LeakyReLU(alpha=0.2))
+    # model.add(Dropout(0.25))
 
     # model.add(Conv2D(2048, kernel_size=3, strides=1, padding="same"))
     # model.add(BatchNormalization(momentum=0.8))
