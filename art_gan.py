@@ -147,3 +147,6 @@ def do_stuff():
 
     print(
         f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
+
+
+do_stuff()
