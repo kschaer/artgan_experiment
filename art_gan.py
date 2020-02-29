@@ -11,18 +11,20 @@ import os
 
 # Preview image Frame
 PREVIEW_ROWS = 4
-PREVIEW_COLS = 7
+PREVIEW_COLS = 4
 PREVIEW_MARGIN = 4
 SAVE_FREQ = 100
 # Size vector to generate images from
 NOISE_SIZE = 100
 # Configuration
 EPOCHS = 10000  # number of iterations
-BATCH_SIZE = 32
+# BATCH_SIZE = 32
+BATCH_SIZE = 8
 GENERATE_RES = 3
 # GENERATE_RES = 4
 # IMAGE_SIZE = 512  # rows/cols
-IMAGE_SIZE = 128
+IMAGE_SIZE = 256
+# IMAGE_SIZE = 128
 IMAGE_CHANNELS = 3
 
 DOUBLE_IMAGE_SIZE = IMAGE_SIZE * 2
@@ -63,10 +65,10 @@ def build_discriminator(image_shape):
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    # model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
-    # model.add(BatchNormalization(momentum=0.8))
-    # model.add(LeakyReLU(alpha=0.2))
-    # model.add(Dropout(0.25))
+    model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.25))
 
     # model.add(Conv2D(2048, kernel_size=3, strides=1, padding="same"))
     # model.add(BatchNormalization(momentum=0.8))
@@ -82,9 +84,12 @@ def build_discriminator(image_shape):
 
 def build_generator(noise_size, channels):
     model = Sequential()
-    model.add(Dense(4 * 4 * DOUBLE_IMAGE_SIZE,
+    # model.add(Dense(4 * 4 * DOUBLE_IMAGE_SIZE,
+    #                 activation="relu",       input_dim=noise_size))
+    # model.add(Reshape((4, 4, DOUBLE_IMAGE_SIZE)))
+    model.add(Dense(8 * 8 * DOUBLE_IMAGE_SIZE,
                     activation="relu",       input_dim=noise_size))
-    model.add(Reshape((4, 4, DOUBLE_IMAGE_SIZE)))
+    model.add(Reshape((8, 8, DOUBLE_IMAGE_SIZE)))
     model.add(UpSampling2D())
     model.add(Conv2D(DOUBLE_IMAGE_SIZE, kernel_size=3, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
@@ -182,11 +187,11 @@ def do_stuff():
 
             if not os.path.exists(checkpoint_dir):
                 os.makedirs(checkpoint_dir)
-            combined.save_weights(checkpoint_path.format(epoch=0))
+            combined.save_weights(checkpoint_path.format(epoch=cnt))
 
             cnt += 1
-        print(
-            f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
+        # print(
+        #     f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
 
 
 do_stuff()
