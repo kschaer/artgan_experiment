@@ -1,0 +1,5 @@
+dataset/*
+downloads/*
+manual/*
+cyanotype_data.npy
+.DS_Store
