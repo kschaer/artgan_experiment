@@ -3,6 +3,8 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
 from keras.optimizers import Adam
+# from keras.callbacks import ModelCheckpoint
+
 import numpy as np
 from PIL import Image
 import os
@@ -24,6 +26,9 @@ IMAGE_CHANNELS = 3
 
 # load stuff
 training_data = np.load('cyanotype_data_large.npy')
+
+checkpoint_path = "training_2/cp-{epoch:04d}.ckpt"
+checkpoint_dir = os.path.dirname(checkpoint_path)
 
 
 def build_discriminator(image_shape):
@@ -91,6 +96,14 @@ def build_generator(noise_size, channels):
     input = Input(shape=(noise_size,))
     generated_image = model(input)
 
+    # checkpoint_path = "training_1/cp.ckpt"
+    # checkpoint_dir = os.path.dirname(checkpoint_path)
+
+    # # Create a callback that saves the model's weights
+    # cp_callback = ModelCheckpoint(filepath=checkpoint_path,
+    #                                                 save_weights_only=True,
+    #                                                 verbose=1)
+
     return Model(input, generated_image)
 
 
@@ -132,6 +145,10 @@ def do_stuff():
     combined = Model(random_input, validity)
     combined.compile(loss="binary_crossentropy",
                      optimizer=optimizer, metrics=["accuracy"])
+
+    combined.summary()
+    combined.save_weights()
+
     y_real = np.ones((BATCH_SIZE, 1))
     y_fake = np.zeros((BATCH_SIZE, 1))
     fixed_noise = np.random.normal(
@@ -155,6 +172,9 @@ def do_stuff():
         generator_metric = combined.train_on_batch(noise, y_real)
         if epoch % SAVE_FREQ == 0:
             save_images(cnt, fixed_noise, generator)
+
+            combined.save_weights(checkpoint_path.format(epoch=0))
+
             cnt += 1
         print(
             f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
