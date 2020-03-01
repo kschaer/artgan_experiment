@@ -20,7 +20,7 @@ NOISE_SIZE = 100
 # Configuration
 EPOCHS = 10000  # number of iterations
 # BATCH_SIZE = 32
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 GENERATE_RES = 3
 # GENERATE_RES = 4
 # IMAGE_SIZE = 512  # rows/cols
