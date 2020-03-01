@@ -8,9 +8,9 @@ from PIL import Image
 # We are going to resize all our images to 128X128 size and since our images are colored images
 # We are setting our image channels to 3 (RGB)
 
-IMAGE_SIZE = 128
+IMAGE_SIZE = 256
 IMAGE_CHANNELS = 3
-IMAGE_DIR = 'dataset/'
+IMAGE_DIR = 'jellyfish/'
 
 # Defining image dir path. Change this if you have different directory
 images_path = IMAGE_DIR
@@ -24,7 +24,7 @@ print('resizing...')
 for filename in os.listdir(images_path):
     path = os.path.join(images_path, filename)
     print(path)
-    if(path != 'dataset/.DS_Store'):
+    if(path != 'jellyfish/.DS_Store'):
         image = Image.open(path).convert('RGB').resize(
             (IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
 
@@ -40,4 +40,4 @@ training_data = training_data / 127.5 - 1
 
 print('saving file...')
 print(training_data.shape)
-np.save('cyanotype_data_small.npy', training_data)
+np.save('jellyfish_medium.npy', training_data)

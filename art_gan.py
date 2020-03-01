@@ -12,14 +12,15 @@ import os
 # Preview image Frame
 PREVIEW_ROWS = 4
 PREVIEW_COLS = 4
-PREVIEW_MARGIN = 4
+PREVIEW_MARGIN = 0
 SAVE_FREQ = 100
+CHECKPOINT_FREQ = 400
 # Size vector to generate images from
 NOISE_SIZE = 100
 # Configuration
 EPOCHS = 10000  # number of iterations
 # BATCH_SIZE = 32
-BATCH_SIZE = 8
+BATCH_SIZE = 16
 GENERATE_RES = 3
 # GENERATE_RES = 4
 # IMAGE_SIZE = 512  # rows/cols
@@ -35,6 +36,9 @@ training_data = np.load('cyanotype_data_medium.npy')
 
 checkpoint_path = "checkpoints/cp-{epoch:04d}.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
+
+outputimg_path = "images/jellyfish-{epoch:04d}.png"
+outputimg_dir = os.path.dirname(outputimg_path)
 
 
 def build_discriminator(image_shape):
@@ -140,7 +144,8 @@ def save_images(cnt, noise, generator):
     output_path = 'output'
     if not os.path.exists(output_path):
         os.makedirs(output_path)
-    filename = os.path.join(output_path, f"trained-{cnt}.png")
+
+    filename = outputimg_path.format(epoch=cnt)
     im = Image.fromarray(image_array)
     im.save(filename)
 
@@ -183,13 +188,14 @@ def do_stuff():
         discriminator_metric = 0.5 * \
             np.add(discriminator_metric_real, discriminator_metric_generated)
         generator_metric = combined.train_on_batch(noise, y_real)
-        if epoch % SAVE_FREQ == 0:
-            save_images(cnt, fixed_noise, generator)
 
+        if epoch % CHECKPOINT_FREQ == 0:
             if not os.path.exists(checkpoint_dir):
                 os.makedirs(checkpoint_dir)
             combined.save_weights(checkpoint_path.format(epoch=cnt))
 
+        if epoch % SAVE_FREQ == 0:
+            save_images(cnt, fixed_noise, generator)
             cnt += 1
         # print(
         #     f"{epoch} epoch, Discriminator accuracy: {100*  discriminator_metric[1]}, Generator accuracy: {100 * generator_metric[1]}")
