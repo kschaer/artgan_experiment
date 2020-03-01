@@ -142,8 +142,8 @@ def save_images(cnt, noise, generator):
                         IMAGE_SIZE] = generated_images[image_count] * 255
             image_count += 1
     output_path = 'output'
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+    if not os.path.exists(outputimg_dir):
+        os.makedirs(outputimg_dir)
 
     filename = outputimg_path.format(epoch=cnt)
     im = Image.fromarray(image_array)
